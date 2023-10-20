@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Lanzar_objetos : MonoBehaviour
+{
+    public GameObject objeto; // Objeto a lanzar
+    public Transform origen; // Origen del lanzamiento
+    public float fuerza; // Fuerza con la que se lanza el objeto
+    public float tiempodeEspera = 5f; // Tiempo de espera entre lanzamientos (5 segundos)
+    private float tiempoultimoLanzamiento; // Tiempo del último lanzamiento
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Time.time - tiempoultimoLanzamiento > tiempodeEspera)
+        {
+            Lanzar();
+            tiempoultimoLanzamiento = Time.time;
+        }
+    }
+
+    private void Lanzar()
+    {
+        GameObject nuevoObjeto = Instantiate(objeto, origen.position, Quaternion.identity);
+        Rigidbody2D rb = nuevoObjeto.GetComponent<Rigidbody2D>();
+        
+        // Asegúrate de que el Rigidbody2D tiene la gravedad habilitada
+        rb.gravityScale = 1f;
+        
+        // Aplica una fuerza hacia abajo para que el objeto caiga
+        rb.AddForce(Vector2.down * fuerza, ForceMode2D.Impulse);
+        
+        Destroy(nuevoObjeto, 2f); // Elimina el objeto después de 2 segundos
+    }
+}
